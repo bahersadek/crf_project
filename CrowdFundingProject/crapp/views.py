@@ -85,6 +85,7 @@ def CategoreyFormView(request):
 
 def All_Projects(request):
     allprojects = Projects.objects.all()
+    print(allprojects)
     context = {"allprojects": allprojects}
     return render(request, "crapp/projects.html", context)
 
