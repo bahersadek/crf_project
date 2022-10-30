@@ -1,0 +1,152 @@
+{% extends 'crapp/base.html' %}
+{% load crispy_forms_filters %}
+{% load comment_tags %}
+{% load crispy_forms_tags %}
+{% block head_css_section %}
+    {% load static %}
+    <!-- DataTables -->
+  <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+
+  {% endblock head_css_section %}
+  {% block title %} Crowd Funding Projects {% endblock title %}
+{% block dispusername %}   
+    {{ request.user.username }}
+{% endblock %}
+{% block content %}
+{% load static %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Projects</h1>
+          </div>
+          <div class="col-sm-6 float-sm-right">
+            <div class="btn-group-justified float-right" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group text-right" role="group" aria-label="First group">
+                   <a href="{% url 'create_project' %}" style="margin:1px;" class="btn btn-block btn-outline-success"><i class="fas fa-user-plus"></i>  Add Project</a>
+                </div>
+         
+            </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Projects</h3>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+              <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-striped projects">
+              <thead>
+                  <tr>
+                      <th style="width: 1%">
+                          #
+                      </th>
+                      <th style="width: 20%">
+                          Project Name
+                      </th>
+                      <th style="width: 30%">
+                          Campain End within
+                      </th>
+                      <th>
+                          Project Rating
+                      </th>
+                      <th style="width: 8%" class="text-center">
+                          Total Donations
+                      </th>
+                      <th style="width: 20%">
+                      </th>
+                  </tr>
+              </thead>
+              <tbody>
+                {% for project in allprojects %}
+                  <tr>
+                      <td>
+                          #
+                      </td>
+                      <td>
+                          <a href="#">
+                            {{project.title}}
+                          </a>
+                          <br/>
+                          <small>
+                              Created {{project.creation_date}}
+                          </small>
+                      </td>
+                      <td>
+                        {{ project.end_date|timeuntil }}
+                      </td>
+                      <td class="project_progress">
+                          <div class="progress progress-sm">
+                              <div class="progress-bar bg-green" role="progressbar" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" style="width: 57%">
+                              </div>
+                          </div>
+                          <small>
+                              57% Complete
+                          </small>
+                      </td>
+                      <td class="project-state">
+                        {{ project.target }}
+                      </td>
+                      <td class="project-actions text-right">
+                          <a class="btn btn-primary btn-sm" href="{% url 'projectdetails' project.p_id %}">
+                              <i class="fas fa-folder">
+                              </i>
+                              View
+                          </a>
+                          <a class="btn btn-info btn-sm" href="#">
+                              <i class="fas fa-pencil-alt">
+                              </i>
+                              Edit
+                          </a>
+                         
+                      </td>
+                  </tr>
+                  {% endfor %} 
+              </tbody>
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  {% endblock content %}
+  
+  {% block extra_scripts %}
+  {% load static %}
+  <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+  <script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+  <script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+  <script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+  {% endblock extra_scripts %}
+  

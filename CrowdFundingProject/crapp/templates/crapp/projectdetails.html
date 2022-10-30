@@ -1,0 +1,241 @@
+{% extends 'crapp/base.html' %}
+{% load crispy_forms_filters %}
+
+{% load crispy_forms_tags %}
+
+{% block head_css_section %}
+    {% load static %}
+    <!-- DataTables -->
+  <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+  <script>
+    $('.carousel').carousel()
+    </script>
+  {% endblock head_css_section %}
+  {% block title %} Crowd Funding Projects {% endblock title %}
+{% block dispusername %}   
+    {{ request.user.username }}
+{% endblock %}
+{% block content %}
+{% load static %}
+{% load comment_tags %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Project Details</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">E-commerce</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card card-solid">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12 col-sm-6">
+              <h3 class="d-inline-block d-sm-none">LOWA Men’s Renegade GTX Mid Hiking Boots Review</h3>
+              <div class="col-12">
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                    </ol>
+                    <div class="carousel-inner">
+                        {% for img in images %}
+                        {% if forloop.first %}
+                                    <div class="carousel-item active  ">
+                                {% else %}
+                                    <div class="carousel-item  ">
+                                {% endif %}
+                                {% load static %}
+                                <img class="d-block w-100" src="{{ img.picture.url }}" alt="  {{ img.title }}" >
+                            </div>
+                        {% endfor %}                 
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+              </div>     
+            </div>
+            <div class="col-12 col-sm-6">
+              <h3 class="my-3"><b>{{project.0.title}}</b></h3>
+              <p>{{project.0.details}}</p>
+
+              <hr>
+              <h4>Targets</h4>
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <div class="info-box bg-light">
+                    <div class="info-box-content">
+                      <span class="info-box-text text-center text-muted">Total Donation</span>
+                      <span class="info-box-number text-center text-muted mb-0">2300</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-3">
+                  <div class="info-box bg-light">
+                    <div class="info-box-content">
+                      <span class="info-box-text text-center text-muted">Target</span>
+                      <span class="info-box-number text-center text-muted mb-0">{{ project.0.target }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-3">
+                  <div class="info-box bg-light">
+                    <div class="info-box-content">
+                      <span class="info-box-text text-center text-muted">Time Remaining</span>
+                      <span class="info-box-number text-center text-muted mb-0">{{ project.0.end_date|timeuntil }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-3">
+                    <div class="info-box bg-light">
+                      <div class="info-box-content">
+                        <span class="info-box-text text-center text-muted">Project Rate</span>
+                        <span class="info-box-number text-center text-muted mb-0">{{ project.0.end_date|timeuntil }}</span>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+
+              <div class="bg-blue py-2 px-3 mt-4">
+                <h2 class="mb-0">
+                  $80.00
+                </h2>
+                <h4 class="mt-0">
+                  <small>Ex Tax: $80.00 </small>
+                </h4>
+              </div>
+             <br>
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="btn btn-success btn-block">
+                      <i class="fas fa-donate fa-lg mr-2"></i>
+                      Donate
+                    </div>
+    
+                  </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="row">
+            <div class="tags">
+                {% for tag in tags|slice:"10" %}
+                <span class="badge bg-success">{{tag}}</span>
+                {% endfor %}
+              </div>
+          </div>
+          <div class="row mt-4">
+            <nav class="w-100">
+              <div class="nav nav-tabs" id="product-tab" role="tablist">
+                <a class="nav-item nav-link active" id="product-desc-tab" data-toggle="tab" href="#product-desc" role="tab" aria-controls="product-desc" aria-selected="true">Description</a>
+                <a class="nav-item nav-link" id="project-donators-tab" data-toggle="tab" href="#project-donators" role="tab" aria-controls="project-donators" aria-selected="false">Donators</a>
+                <a class="nav-item nav-link" id="product-comments-tab" data-toggle="tab" href="#product-comments" role="tab" aria-controls="product-comments" aria-selected="false">Comments</a>
+                <a class="nav-item nav-link" id="product-rating-tab" data-toggle="tab" href="#product-rating" role="tab" aria-controls="product-rating" aria-selected="false">Rating</a>
+                
+              </div>
+            </nav>
+            <div class="tab-content p-4" style="width:100%;" id="nav-tabContent">
+              <div class="tab-pane fade show active" id="product-desc" role="tabpanel" aria-labelledby="product-desc-tab"> 
+                <p>{{project.0.details}}</p>
+              </div>
+              <div class="tab-pane fade" id="project-donators" role="tabpanel" aria-labelledby="project-donators-tab"> 
+                <div class="col-md-12">                
+                    <table class="table table-striped projects">
+                        <thead>
+                            <tr>
+                                <th style="width: 1%">
+                                    #
+                                </th>
+                                <th style="width: 50%">
+                                    Donator Name
+                                </th>
+                                <th style="width: 49%">
+                                    Donation Value
+                                </th>                            
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for donator in donations %}
+                            <tr>
+                                <td>
+                                    #
+                                </td>
+                                <td>
+                                    <a href="#">
+                                    {{donator.donator.username}}
+                                    </a>
+                                </td>
+                                <td>
+                                    {{donator.amount}}
+                                </td>
+                            </tr>
+                            {% endfor %} 
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="product-comments" role="tabpanel" aria-labelledby="product-comments-tab"> 
+                <div class="row">
+                    <div class="col-md-12">
+                {% load comment_tags %}  {# Loading the template tag #}
+                {% render_comments project.0 request %}  {# Render all the comments belong to the passed object "obj" #}
+                    </div>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="product-rating" role="tabpanel" aria-labelledby="product-rating-tab"> 
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+
+{% endblock content %}
+  
+{% block extra_scripts %}
+{% load static %}
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+
+{% endblock extra_scripts %}
