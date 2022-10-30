@@ -11,6 +11,7 @@ urlpatterns = [
     path('projects/', views.All_Projects, name="projects"),
     path('categorey/', views.CategoreyFormView, name="categorey"),
     path('projectdetails/<int:id>', views.ProjectDetails, name='projectdetails'),
+    path('donate/<int:id>/<amount>', views.Donate, name='donate'),
     #path('', TemplateView.as_view(template_name='crowdfunding/home.html'), name='home'), # new
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

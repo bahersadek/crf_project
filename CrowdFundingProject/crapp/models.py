@@ -38,7 +38,7 @@ class Projects(models.Model):
     is_featured = models.BooleanField(default=False)
     tags = TaggableManager(blank=True)
     comments = GenericRelation(Comment)
-    rating = GenericRelation(Rating, related_query_name='Projects')
+    ratings = GenericRelation(Rating)
 
     def __str__(self):
         return str(self.title)

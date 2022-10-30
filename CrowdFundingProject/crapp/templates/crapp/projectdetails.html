@@ -1,6 +1,7 @@
 {% extends 'crapp/base.html' %}
 {% load crispy_forms_filters %}
-
+{% load mathfilters %}
+{% load humanize %}
 {% load crispy_forms_tags %}
 
 {% block head_css_section %}
@@ -12,6 +13,8 @@
   <script>
     $('.carousel').carousel()
     </script>
+  <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
+  <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
   {% endblock head_css_section %}
   {% block title %} Crowd Funding Projects {% endblock title %}
 {% block dispusername %}   
@@ -28,12 +31,7 @@
           <div class="col-sm-6">
             <h1>Project Details</h1>
           </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">E-commerce</li>
-            </ol>
-          </div>
+
         </div>
       </div><!-- /.container-fluid -->
     </section>
@@ -88,7 +86,7 @@
                   <div class="info-box bg-light">
                     <div class="info-box-content">
                       <span class="info-box-text text-center text-muted">Total Donation</span>
-                      <span class="info-box-number text-center text-muted mb-0">2300</span>
+                      <span class="info-box-number text-center text-muted mb-0">{{ donatorcount.0.count }}</span>
                     </div>
                   </div>
                 </div>
@@ -96,7 +94,7 @@
                   <div class="info-box bg-light">
                     <div class="info-box-content">
                       <span class="info-box-text text-center text-muted">Target</span>
-                      <span class="info-box-number text-center text-muted mb-0">{{ project.0.target }}</span>
+                      <span class="info-box-number text-center text-muted mb-0">{{ project.0.target|intcomma }}</span>
                     </div>
                   </div>
                 </div>
@@ -111,8 +109,8 @@
                 <div class="col-12 col-sm-3">
                     <div class="info-box bg-light">
                       <div class="info-box-content">
-                        <span class="info-box-text text-center text-muted">Project Rate</span>
-                        <span class="info-box-number text-center text-muted mb-0">{{ project.0.end_date|timeuntil }}</span>
+                        <span class="info-box-text text-center text-muted">Overall Rate</span>
+                        <span class="info-box-number text-center text-muted mb-0">{{ project.0.ratings.get.average|intword }}</span>
                       </div>
                     </div>
                   </div>
@@ -120,20 +118,18 @@
 
               <div class="bg-blue py-2 px-3 mt-4">
                 <h2 class="mb-0">
-                  $80.00
+                  {{ totalfund|intcomma }} EGP
                 </h2>
                 <h4 class="mt-0">
-                  <small>Ex Tax: $80.00 </small>
+                  <small>Out Of: {{ project.0.target|intcomma }} EGP </small>
                 </h4>
               </div>
              <br>
               <div class="row">
                 <div class="col-md-12">
-                    <div class="btn btn-success btn-block">
-                      <i class="fas fa-donate fa-lg mr-2"></i>
-                      Donate
-                    </div>
-    
+                  <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#modal-lg">
+                    <i class="fas fa-donate fa-lg mr-2"></i> Donate
+                  </button>                    
                   </div>
               </div>
 
@@ -205,7 +201,12 @@
                 </div>
               </div>
               <div class="tab-pane fade" id="product-rating" role="tabpanel" aria-labelledby="product-rating-tab"> 
-                
+                <div class="row">
+                  <div class="col-md-12">
+                    {% load ratings %}  {# Loading the template tag #}
+              {% ratings project.0 %}  {# Render all the comments belong to the passed object "obj" #}
+                  </div>
+              </div>
               </div>
             </div>
           </div>
@@ -218,6 +219,50 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
+  <div class="modal fade" id="modal-lg">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+        <div class="modal-header">
+          <h4 class="modal-title">Donate</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+           
+                <div class="form-group">
+                    <label for="Title">Donation Amount</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fas fa-dollar-sign"></i>
+                        </span>
+                      </div>
+                      <input name="donateammount" type="text" class="form-control"/>
+                      <div class="input-group-append">
+                        <div class="input-group-text"><i class="fas fa-donate"></i></div>
+                      </div>
+                    </div>
+                  </div>
+            
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-donate">
+          </i>
+          Donate</button>
+        
+        </div>
+        </form>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
 
 
 

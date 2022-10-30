@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Projects, Category, ProjectPictures
+from .models import Projects, Category, ProjectPictures, DonationFund
 
 class ProjectForm(forms.ModelForm):
 
@@ -38,6 +38,9 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = "__all__"
+
+class DonationForm(forms.ModelForm):
+    pass
 
 class ProjectPictureForm(forms.ModelForm):
     

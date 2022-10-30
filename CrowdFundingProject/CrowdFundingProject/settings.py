@@ -41,12 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'crowdfunding.apps.CrowdfundingConfig',    
     'crispy_forms',
     'crispy_bootstrap5',
     'taggit',   ##Addon for projects tags
     'comment',  ##Addon for projects comments 
     'star_ratings', ##Addon for Projects rating
+    'mathfilters', ##Addon for HTML math operations
 ]
 
 MIDDLEWARE = [

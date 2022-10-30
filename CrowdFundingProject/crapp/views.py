@@ -1,3 +1,4 @@
+from itertools import count
 from django.shortcuts import get_object_or_404, render
 from django.shortcuts import redirect
 from django.http import HttpResponse
@@ -5,8 +6,14 @@ from django.conf import settings
 from django.templatetags.static import static
 from django.contrib import messages
 from django.forms import modelformset_factory
-from taggit.models import Tag
+from django.db.models import Count, Sum
+from django.utils import timezone
 
+import datetime
+from taggit.models import Tag
+from star_ratings.models import Rating, RatingManager
+
+from decimal import Decimal
 import os
 from .models import *
 from .forms import *
@@ -91,11 +98,53 @@ def All_Projects(request):
 
 def ProjectDetails(request,id):
     #projectc = get_object_or_404(Projects, p_id=id)
-    project = Projects.objects.filter(id=id).all()
-    print(project)
-    images = ProjectPictures.objects.filter(project_id=id).all()
-    print(images)
+    project = Projects.objects.filter(id=id).all()    
+    images = ProjectPictures.objects.filter(project_id=id).all()    
     donations = DonationFund.objects.filter(project=id).all()
     tags = Projects.tags.all()
-    context = {"project":project, "images":images, "donations": donations, "tags": tags}
+    
+    #totalrate = Projects.objects.filter(ratings__isnull=False).only('ratings__average')
+    #totalrate = Projects.objects.select_related('ratings').filter(id=id)
+    #print(totalrate)
+    donatorcount = DonationFund.objects.filter(project=id).all().annotate(count=Count('donator'))
+    totalfund = DonationFund.objects.filter(project=id).all().aggregate(Sum('amount'))['amount__sum']
+    
+    context = {"project":project, "images":images, "donations": donations, "tags": tags, "donatorcount": donatorcount, "totalfund": totalfund}
+    if request.method == 'POST':
+        amount = request.POST.get('donateammount')
+        print(amount)
+        return redirect('donate', id , amount)
     return render(request, "crapp/projectdetails.html", context)
+
+def Donate(request, id, amount):
+    project = get_object_or_404(Projects, id= id)
+    context = {"project": project}
+    #if request.method == "POST":
+     #amount = request.POST.get('amount')
+    print("Hello")
+    # validate
+    if amount:
+        #price_in_decimal = Decimal(amount)
+        #print(price_in_decimal)
+        if project.end_date > timezone.now():
+            prev_donations = DonationFund.objects.filter(project=id, donator=request.user.id)
+            print(prev_donations)
+            # has donated for this campaign before
+            if prev_donations:
+
+                prev_donations[0].amount += int(amount)
+                prev_donations[0].save()
+
+            # first time
+            else:
+                DonationFund.objects.create(
+                    amount=amount, project=project, donator=request.user)
+        return redirect('projectdetails', id)
+
+    else:
+        messages.error(request, 'Invalid amount')
+
+    return redirect('projectdetails', id)
+       
+def ProjectReport(request, id):
+    pass
