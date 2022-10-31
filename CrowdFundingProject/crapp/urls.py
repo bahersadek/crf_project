@@ -7,11 +7,17 @@ from . import views
 urlpatterns = [
     path('comment/', include('comment.urls')),
     path('ratings/', include('star_ratings.urls', namespace='ratings')),
+    path('home/', views.home, name="home"),
     path('addproject/', views.ProjectsFormExtendView, name="create_project"),
     path('projects/', views.All_Projects, name="projects"),
     path('categorey/', views.CategoreyFormView, name="categorey"),
+    path('userprojects/', views.UserProjects, name="userprojects"),
+    path('userdonate/', views.UserDonation, name="userdonate"),
     path('projectdetails/<int:id>', views.ProjectDetails, name='projectdetails'),
     path('donate/<int:id>/<amount>', views.Donate, name='donate'),
+    path('projectreports/<int:id>', views.ProjectReport, name='projectreports'),
+    path('catprojects/<int:id>', views.CategoreyProjectView, name='catprojects'),
+    
     #path('', TemplateView.as_view(template_name='crowdfunding/home.html'), name='home'), # new
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] 

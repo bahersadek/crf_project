@@ -17,7 +17,7 @@ from decimal import Decimal
 import os
 from .models import *
 from .forms import *
-
+from users.models import Profile
 
 
 def ProjectsFormView(request):    
@@ -97,19 +97,16 @@ def All_Projects(request):
     return render(request, "crapp/projects.html", context)
 
 def ProjectDetails(request,id):
-    #projectc = get_object_or_404(Projects, p_id=id)
+    projectc = get_object_or_404(Projects, id=id)
     project = Projects.objects.filter(id=id).all()    
     images = ProjectPictures.objects.filter(project_id=id).all()    
     donations = DonationFund.objects.filter(project=id).all()
     tags = Projects.tags.all()
-    
-    #totalrate = Projects.objects.filter(ratings__isnull=False).only('ratings__average')
-    #totalrate = Projects.objects.select_related('ratings').filter(id=id)
-    #print(totalrate)
+    similarprojects = projectc.tags.similar_objects()
     donatorcount = DonationFund.objects.filter(project=id).all().annotate(count=Count('donator'))
     totalfund = DonationFund.objects.filter(project=id).all().aggregate(Sum('amount'))['amount__sum']
-    
-    context = {"project":project, "images":images, "donations": donations, "tags": tags, "donatorcount": donatorcount, "totalfund": totalfund}
+    myuser = get_object_or_404(Profile, user_id=request.user.id)    
+    context = {"myuser":myuser, "project":project, "images":images, "donations": donations, "tags": tags, "donatorcount": donatorcount, "totalfund": totalfund, "similarprojects": similarprojects[:5]}
     if request.method == 'POST':
         amount = request.POST.get('donateammount')
         print(amount)
@@ -145,6 +142,52 @@ def Donate(request, id, amount):
         messages.error(request, 'Invalid amount')
 
     return redirect('projectdetails', id)
-       
+
 def ProjectReport(request, id):
-    pass
+    project = get_object_or_404(Projects, id=id)
+    if request.method == 'POST':
+        form = ProjectReportsForm(request.POST)
+
+        if form.is_valid():
+            new = form.save(commit=False) 
+            new.reporter = request.user  
+            new.project = project  
+            new.save()
+            return redirect('projects')
+        else:
+            print("Not Valid")
+            print(form.errors)
+            #print(form.get("book_image"))
+            return render(request, 'crapp/projectreports.html',{'form':form})
+    else:
+        form = ProjectReportsForm()
+        context = {"project": project,'form': form}
+        return render(request, "crapp/projectreports.html", context)
+
+def home(request):
+    myuser = get_object_or_404(Profile, user_id=request.user.id)    
+    topprojects = Projects.objects.filter(ratings__isnull=False).order_by('ratings__average')
+    lastprojects = Projects.objects.all().order_by('creation_date')
+    featuredprojects =  Projects.objects.filter(ratings__isnull=False, is_featured=True).order_by('ratings__average')
+    cats = Category.objects.all()
+    context = {"myuser":myuser, "topprojects": topprojects[:5], "lastprojects":lastprojects[:5], "featuredprojects":featuredprojects[:5],"cats":cats}
+    return render(request, "crapp/home.html", context)
+
+def CategoreyProjectView(request, id):
+    cats = Category.objects.filter(c_id=id).all()
+    projects = Projects.objects.filter(category=id).all()
+    context = {"cats": cats, "projects": projects}
+    return render(request, "crapp/categoreyprojects.html", context)
+
+def UserProjects(request):
+    projects = Projects.objects.filter(owner=request.user).all()
+    myuser = get_object_or_404(Profile, user_id=request.user.id)    
+    context = {"projects":projects, "myuser":myuser}
+    return render(request, "crapp/userprojects.html", context)
+
+def UserDonation(request):
+    donation = DonationFund.objects.filter(donator=request.user).all()
+    myuser = get_object_or_404(Profile, user_id=request.user.id) 
+    context = {"donation":donation, "myuser":myuser}
+    return render(request, "crapp/userdonate.html", context)
+    

@@ -3,6 +3,10 @@
 {% load mathfilters %}
 {% load humanize %}
 {% load crispy_forms_tags %}
+{% block dispuserimage %} 
+{% load static %}
+<img src="{{ MEDIA_URL }}{{ myuser.image }}" class="img-circle elevation-2" alt="User Image">
+{% endblock dispuserimage %}
 
 {% block head_css_section %}
     {% load static %}
@@ -17,8 +21,8 @@
   <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
   {% endblock head_css_section %}
   {% block title %} Crowd Funding Projects {% endblock title %}
-{% block dispusername %}   
-    {{ request.user.username }}
+  {% block dispusername %}   
+  {{ request.user.first_name }} {{ request.user.last_name }}
 {% endblock %}
 {% block content %}
 {% load static %}
@@ -31,7 +35,16 @@
           <div class="col-sm-6">
             <h1>Project Details</h1>
           </div>
+          <div class="col-sm-6 float-sm-right">
+            <div class="btn-group-justified float-right" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group text-right" role="group" aria-label="First group">
+                   <a href="{% url 'projectreports' project.0.id %}" style="margin:1px;" class="btn btn-block btn-outline-danger"><i class="fas fa-bug"></i>  Report Project</a>
+                </div>
+         
+            </div>
 
+
+        </div>
         </div>
       </div><!-- /.container-fluid -->
     </section>
@@ -55,12 +68,12 @@
                     <div class="carousel-inner">
                         {% for img in images %}
                         {% if forloop.first %}
-                                    <div class="carousel-item active  ">
+                                    <div class="carousel-item active">
                                 {% else %}
-                                    <div class="carousel-item  ">
+                                    <div class="carousel-item">
                                 {% endif %}
                                 {% load static %}
-                                <img class="d-block w-100" src="{{ img.picture.url }}" alt="  {{ img.title }}" >
+                                <img class="d-block w-100" src="{{ img.picture.url }}" alt="{{ img.title }}" >
                             </div>
                         {% endfor %}                 
                     </div>
@@ -149,7 +162,7 @@
                 <a class="nav-item nav-link" id="project-donators-tab" data-toggle="tab" href="#project-donators" role="tab" aria-controls="project-donators" aria-selected="false">Donators</a>
                 <a class="nav-item nav-link" id="product-comments-tab" data-toggle="tab" href="#product-comments" role="tab" aria-controls="product-comments" aria-selected="false">Comments</a>
                 <a class="nav-item nav-link" id="product-rating-tab" data-toggle="tab" href="#product-rating" role="tab" aria-controls="product-rating" aria-selected="false">Rating</a>
-                
+                <a class="nav-item nav-link" id="similar-projects-tab" data-toggle="tab" href="#similar-projects" role="tab" aria-controls="similar-projects" aria-selected="false">Similar Projects</a>
               </div>
             </nav>
             <div class="tab-content p-4" style="width:100%;" id="nav-tabContent">
@@ -204,9 +217,60 @@
                 <div class="row">
                   <div class="col-md-12">
                     {% load ratings %}  {# Loading the template tag #}
-              {% ratings project.0 %}  {# Render all the comments belong to the passed object "obj" #}
+                    {% ratings project.0 %}  {# Render all the comments belong to the passed object "obj" #}
                   </div>
+                </div>
               </div>
+
+              <div class="tab-pane fade" id="similar-projects" role="tabpanel" aria-labelledby="similar-projects-tab"> 
+                <div class="row">
+                  <div class="col-md-12">
+                     <!-- Default box -->
+                      <div class="card card-solid">
+                        <div class="card-body pb-0">
+                          <div class="row">
+                            {% for proj in similarprojects %}                
+                              <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+                                <div class="card bg-light d-flex flex-fill">
+                                  <div class="card-header text-muted border-bottom-0">
+                                    {{proj.category.c_name}}
+                                  </div>
+                                  <div class="card-body pt-0">
+                                    <div class="row">
+                                      <div class="col-7">
+                                        <h2 class="lead"><b>{{proj.title}}</b></h2>
+                                        <p class="text-muted text-sm"><b>Target: {{proj.target |intcomma}}</b></p>
+                                        <ul class="ml-4 mb-0 fa-ul text-muted">
+                                          <li class="small"><span class="fa-li"><i class="fas fa-clock"></i></span> End within {{proj.end_date|timeuntil}}</li>
+                                          <li class="small"><span class="fa-li"><i class="fas fa-star"></i></span> Overall Rating {{proj.ratings.get.average|intword}}</li>
+                                        </ul>
+                                      </div>
+                                      <div class="col-5 text-center">
+                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTz8Kv2E_U4_EOnE14lLs_ty5wtAEVHewc0g&usqp=CAU" alt="user-avatar" class="img-circle img-fluid">
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="text-right">
+                                      <a href="{% url 'projectdetails' proj.id %}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-info-circle"></i>  View Project
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>                                        
+                            {% endfor %}              
+                          </div>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">         
+                        </div>
+                        <!-- /.card-footer -->
+                      </div>
+                      <!-- /.card -->
+                                  
+                  </div>
+                </div>
               </div>
             </div>
           </div>

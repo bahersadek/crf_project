@@ -76,6 +76,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'social_django.context_processors.backends',
+                'django.template.context_processors.media',
                 'social_django.context_processors.login_redirect',
                 'django.template.context_processors.request',
             ],
@@ -158,7 +159,7 @@ EMAIL_HOST_USER = "postmaster@sandbox7027f796cbc3423ba852fae7a7ae4715.mailgun.or
 EMAIL_HOST_PASSWORD = "5e924714bcfec016eb841857d54304ea-8845d1b1-bf50ae66"
 EMAIL_USE_TLS = True
 
-LOGIN_REDIRECT_URL = "dashboard"
+LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "dashboard"  # new
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

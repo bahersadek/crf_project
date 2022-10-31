@@ -30,14 +30,7 @@
           <div class="col-sm-6">
             <h1>Projects</h1>
           </div>
-          <div class="col-sm-6 float-sm-right">
-            <div class="btn-group-justified float-right" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="btn-group text-right" role="group" aria-label="First group">
-                   <a href="{% url 'create_project' %}" style="margin:1px;" class="btn btn-block btn-outline-success"><i class="fas fa-user-plus"></i>  Add Project</a>
-                </div>
-         
-            </div>
-        </div>
+          
       </div><!-- /.container-fluid -->
     </section>
 
@@ -82,7 +75,7 @@
                   </tr>
               </thead>
               <tbody>
-                {% for project in allprojects %}
+                {% for project in projects %}
                   <tr>
                       <td>
                           #
