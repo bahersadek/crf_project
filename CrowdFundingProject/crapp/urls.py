@@ -14,9 +14,12 @@ urlpatterns = [
     path('userprojects/', views.UserProjects, name="userprojects"),
     path('userdonate/', views.UserDonation, name="userdonate"),
     path('projectdetails/<int:id>', views.ProjectDetails, name='projectdetails'),
+    path('editproject/<int:id>', views.EditProject, name='editproject'),
     path('donate/<int:id>/<amount>', views.Donate, name='donate'),
     path('projectreports/<int:id>', views.ProjectReport, name='projectreports'),
     path('catprojects/<int:id>', views.CategoreyProjectView, name='catprojects'),
+    path('cancelproject/<int:id>', views.CancelProject, name='cancelproject'),
+    path('search/<str:search>', views.search, name='search'),
     
     #path('', TemplateView.as_view(template_name='crowdfunding/home.html'), name='home'), # new
 

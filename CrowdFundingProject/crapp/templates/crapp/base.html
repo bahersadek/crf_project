@@ -89,7 +89,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'projects' %}" class="nav-link">
+            <a href="{% url 'projects' %}" class="nav-link{% block Projects-active-main %}{% endblock %}">
               <i class="nav-icon fas fa-copy"></i>
               <p>
                 Projects

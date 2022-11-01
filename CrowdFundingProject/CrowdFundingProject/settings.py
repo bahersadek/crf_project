@@ -148,6 +148,8 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "social_core.backends.github.GithubOAuth2",
 ]
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 SOCIAL_AUTH_GITHUB_KEY = "020cf97adc08d8afd417"
@@ -159,6 +161,7 @@ EMAIL_HOST_USER = "postmaster@sandbox7027f796cbc3423ba852fae7a7ae4715.mailgun.or
 EMAIL_HOST_PASSWORD = "5e924714bcfec016eb841857d54304ea-8845d1b1-bf50ae66"
 EMAIL_USE_TLS = True
 
+LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "dashboard"  # new
 

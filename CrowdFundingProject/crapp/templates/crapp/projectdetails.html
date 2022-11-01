@@ -7,7 +7,7 @@
 {% load static %}
 <img src="{{ MEDIA_URL }}{{ myuser.image }}" class="img-circle elevation-2" alt="User Image">
 {% endblock dispuserimage %}
-
+{% now "Y-m-d" as todays_date %}
 {% block head_css_section %}
     {% load static %}
     <!-- DataTables -->
@@ -140,9 +140,14 @@
              <br>
               <div class="row">
                 <div class="col-md-12">
+                  {% if now|date:"Y-m-d" < project.0.end_date|date:"Y-m-d"  %}
                   <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#modal-lg">
                     <i class="fas fa-donate fa-lg mr-2"></i> Donate
-                  </button>                    
+                  </button>  
+                  {%else%}
+                  <h2><strong>Project Closed</strong> Since {{project.0.end_date|date:"Y-m-d"}}</h2>                  
+        {% endif %}
+                                    
                   </div>
               </div>
 

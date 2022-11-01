@@ -8,10 +8,8 @@
 <img src="{{ MEDIA_URL }}{{ myuser.image }}" class="img-circle elevation-2" alt="User Image">
 {% endblock dispuserimage %}
 
-{% block profile-active %}
-menu-open
-{% endblock %}
-{% block profile-active-myprofile %}active{% endblock %}
+
+{% block Projects-active-main %} active{% endblock %}
 
 {% block head_css_section %}
     {% load static %}
@@ -40,7 +38,7 @@ menu-open
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Delete Account</h1>
+            <h1>Edit Project</h1>
           </div>          
         </div>
       </div><!-- /.container-fluid -->
@@ -48,7 +46,7 @@ menu-open
 
     <!-- Main content -->
     <section class="content">
-       <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
       <div class="container-fluid">
         <div class="row">
@@ -56,31 +54,82 @@ menu-open
             <div class="card">
               <div class="card-header p-2">
                 <ul class="nav nav-pills">
-                  <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Delete Account</a></li>
+                  <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Basic Information</a></li>
                  </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
                 <div class="tab-content">
                   <div class="active tab-pane" id="activity">
                     <div class="row">
-                        <div class="col-md-12">                        
+                        <div class="col-md-4">                        
                             <div class="form-group row">
-                                <label for="inputName" class="col-sm-4 col-form-label">Please Type <strong>{{ request.user.username }}</strong></label>
+                                <label for="inputName" class="col-sm-4 col-form-label">Project Title</label>
                                 <div class="col-sm-8">
-                                    <input type="email" class="form-control"" id="usernameinput" name="usernameinput" placeholder="{{ request.user.username }}">
+                                  {{projectform.title}}
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="inputName" class="col-sm-4 col-form-label">Please Type your Password</label>
+                                <label for="inputName" class="col-sm-4 col-form-label">Details</label>
                                 <div class="col-sm-8">
-                                    <input type="password" class="form-control" id="passwordinput" name="passwordinput" placeholder="Password">
+                                    {{projectform.details}}
                                 </div>
                             </div>
                             <div class="form-group row">
-                                {% if error and error.strip %}
-                                {{error}}
-                                {%endif%}
+                                <label for="inputName" class="col-sm-4 col-form-label">Category</label>
+                                <div class="col-sm-8">
+                                    {{projectform.category}}
+                                </div>
                             </div>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">Featured</label>
+                                <div class="col-sm-8">
+                                    {% if user.is_superuser %}
+                                        {{projectform.is_featured}}
+                                    {% else %}
+                                        Not Allowed
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">Creation Date</label>
+                                <div class="col-sm-8">
+                                    <input type="email" class="form-control" value="{{projectc.creation_date}}" id="inputName" readonly>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="col-md-4">
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">Target</label>
+                                <div class="col-sm-8">
+                                    {{projectform.target}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">Start Date</label>
+                                <div class="col-sm-8">
+                                    {{projectform.start_date}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">End Date</label>
+                                <div class="col-sm-8">
+                                    {{projectform.end_date}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">Tags</label>
+                                <div class="col-sm-8">
+                                    {{projectform.tags}}
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group row">
+                                {{ projectform.images }}
+                            </div>
+    
                         </div>
                     </div>
                     
@@ -90,14 +139,14 @@ menu-open
                 <!-- /.tab-content -->
               </div><!-- /.card-body -->
               <div class="card-footer">
-                <a href="{% url 'password_change' %}">Change password</a>  || <a href="{% url 'password_reset' %}">I forgot my password</a> || <a href="#">Delete My Account</a>
+                <a href="{% url 'projects' %}">Change password</a>  || <a href="{% url 'password_reset' %}">I forgot my password</a> || <a href="{% url 'deleteaccount' %}">Delete My Account</a>
               </div>
             </div>
             <!-- /.card -->
             <div class="row">
                 <div class="col-12">
-                  <a href="{% url 'userprofile' %}" class="btn btn-success">Cancel</a>
-                  <input type="submit" value="Delete Account" class="btn btn-danger float-right">
+                  <a href="{% url 'projects' %}" class="btn btn-secondary">Cancel</a>
+                  <input type="submit" value="Save Edits" class="btn btn-success float-right">
                 </div>
               </div>
           </div>
@@ -105,7 +154,7 @@ menu-open
         </div>
         <!-- /.row -->
       </div><!-- /.container-fluid -->
-       </form>
+    </form>
     </section>
     <!-- /.content -->
   </div>

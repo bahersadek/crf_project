@@ -1,5 +1,6 @@
 from django.contrib.auth import login
 from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from users.forms import CustomUserCreationForm, UserProfileForm
 from django.template.loader import render_to_string
@@ -76,6 +77,7 @@ def register(request):
             print(form.errors)
             return render(request, 'users/register.html', {'form': form})
 
+@login_required
 def UserProfile(request):
     #userporfile = Profile.objects.filter(user=request.user).all()
     myuser = get_object_or_404(Profile, user_id=request.user.id) 
@@ -88,7 +90,8 @@ def UserProfile(request):
                 "myuser":myuser,"totalfund":totalfund,
                 "projectcount":len(projects), "donationcount":len(donation) }
     return render(request, "users/userprofile.html", context)
-    
+
+@login_required  
 def EditUserProfile(request):    
     myuser = get_object_or_404(Profile, user_id=request.user.id) 
     userprofile = UserProfileForm(instance=myuser)
@@ -114,14 +117,15 @@ def EditUserProfile(request):
             print(form.errors)
             return render(request, 'users/editprofile.html', {'userprofile': form})
 
-
 def deleteaccount(request):
     myuser = get_object_or_404(Profile, user_id=request.user.id) 
     userprofile = UserProfileForm(instance=myuser)
+    print("hello")
     if request.method == "GET":        
         context = {"userprofile":userprofile, "myuser":myuser, "error":"" }
         return render(request, "users/deleteaccount.html", context)
     elif request.method == "POST":
+        print("test")
         password = request.POST.get("passwordinput")
         username = request.POST.get("usernameinput")
         is_password_correct = request.user.check_password(password)

@@ -7,7 +7,7 @@ class ProjectForm(forms.ModelForm):
 
     class Meta:
         model = Projects
-        fields = ['title', 'details', 'target','start_date', 'end_date', 'category', 'tags']
+        fields = ['title', 'details', 'target','start_date', 'end_date', 'category', 'tags','is_featured']
     
     def __init__(self, *args, **kwargs):
         super(ProjectForm, self).__init__(*args, **kwargs)
@@ -28,7 +28,7 @@ class ProjectForm(forms.ModelForm):
             self._errors["end_date"] = self.error_class([msg])
 
 class ProjectFormExtend(ProjectForm):
-    images = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    images = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False)
     
     class Meta(ProjectForm.Meta):
         fields = ProjectForm.Meta.fields + ['images',]

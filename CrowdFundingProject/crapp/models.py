@@ -46,7 +46,7 @@ class Projects(models.Model):
     errors = {}
 
     def clean(self):
-        if (self.is_featured == True and Projects.objects.filter(is_featured=True).exclude(id=self.p_id).count() >= 5):
+        if (self.is_featured == True and Projects.objects.filter(is_featured=True).exclude(id=self.id).count() >= 5):
             raise ValidationError(
                 {'is_featured': _('You already have five featured campaigns.')})
 

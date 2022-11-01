@@ -93,30 +93,40 @@
                         {{ project.end_date|timeuntil }}
                       </td>
                       <td class="project_progress">
-                          <div class="progress progress-sm">
-                              <div class="progress-bar bg-green" role="progressbar" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" style="width: 57%">
-                              </div>
-                          </div>
-                          <small>
-                              57% Complete
-                          </small>
-                      </td>
+                        <div class="progress progress-sm">
+                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="{{project.progres}}" aria-valuemin="0" aria-valuemax="100" style="width: {{project.progres}}%">
+                            </div>
+                        </div>
+                        <small>
+                          {{project.progres}}% of Target
+                        </small>
+                    </td>
                       <td class="project-state">
                         {{ project.target }}
                       </td>
                       <td class="project-actions text-right">
-                          <a class="btn btn-primary btn-sm" href="{% url 'projectdetails' project.id %}">
-                              <i class="fas fa-folder">
-                              </i>
-                              View
-                          </a>
-                          <a class="btn btn-info btn-sm" href="#">
-                              <i class="fas fa-pencil-alt">
-                              </i>
-                              Edit
-                          </a>
-                         
-                      </td>
+                        <a class="btn btn-primary btn-sm" href="{% url 'projectdetails' project.id %}">
+                            <i class="fas fa-folder">
+                            </i>
+                            View
+                        </a>
+                        {% if user.id == project.owner.id or user.is_superuser %}
+                        <a class="btn btn-info btn-sm" href="{% url 'editproject' project.id %}">
+                          <i class="fas fa-pencil-alt">
+                          </i>
+                          Edit
+                      </a>
+                      {% endif %}
+                      {% if user.id == project.owner.id and project.progres <= 25 or user.id == project.owner.id and project.progres is None %}
+                        <a class="btn btn-danger btn-sm" href="{% url 'cancelproject' project.id %}">
+                          <i class="fas fa-pencil-alt">
+                          </i>
+                          Cancel
+                      </a>
+                      {% endif %}
+                        
+                       
+                    </td>
                   </tr>
                   {% endfor %} 
               </tbody>

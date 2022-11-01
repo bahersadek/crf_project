@@ -2,6 +2,10 @@
 {% load crispy_forms_filters %}
 {% load comment_tags %}
 {% load crispy_forms_tags %}
+{% block dispuserimage %} 
+{% load static %}
+<img src="{{ MEDIA_URL }}{{ myuser.image }}" class="img-circle elevation-2" alt="User Image">
+{% endblock dispuserimage %}
 {% block head_css_section %}
     {% load static %}
     <!-- DataTables -->
@@ -10,8 +14,8 @@
   <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
 
   {% endblock head_css_section %}
-{% block dispusername %}   
-    {{ request.user.username }}
+  {% block dispusername %}   
+  {{ request.user.first_name }} {{request.user.last_name}}
 {% endblock %}
 {% block content %}
 {% load static %}
