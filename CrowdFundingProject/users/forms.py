@@ -28,3 +28,8 @@ class CustomUserCreationForm(UserCreationForm):
 #     class Meta:
 #         model = Profile
 #         fields = "__all__"
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('first_name', 'last_name', 'phone', 'image', 'birthdate', 'facebook_url', 'country')

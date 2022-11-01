@@ -1,0 +1,188 @@
+{% extends 'users/profilebase.html' %}
+{% load crispy_forms_filters %}
+{% load mathfilters %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% block dispuserimage %} 
+{% load static %}
+<img src="{{ MEDIA_URL }}{{ myuser.image }}" class="img-circle elevation-2" alt="User Image">
+{% endblock dispuserimage %}
+
+{% block profile-active %}
+menu-open
+{% endblock %}
+{% block profile-active-myprofile %}active{% endblock %}
+
+{% block head_css_section %}
+    {% load static %}
+    <!-- DataTables -->
+  <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+  <script>
+    $('.carousel').carousel()
+    </script>
+  <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
+  <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
+  {% endblock head_css_section %}
+  {% block title %} Crowd Funding Projects {% endblock title %}
+{% block dispusername %}   
+    {{ request.user.first_name }} {{ request.user.last_name }}
+{% endblock %}
+{% block content %}
+{% load static %}
+{% load comment_tags %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Profile</h1>
+          </div>          
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                  <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Basic Information</a></li>
+                 </ul>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="active tab-pane" id="activity">
+                    <div class="row">
+                        <div class="col-md-4">                        
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">First Name</label>
+                                <div class="col-sm-8">
+                                  {{userprofile.first_name}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">E-Mail</label>
+                                <div class="col-sm-8">
+                                  <input type="email" class="form-control" value="{{ request.user.email }}" id="inputName" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">Country</label>
+                                <div class="col-sm-8">
+                                    {{userprofile.country}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">Privilage</label>
+                                <div class="col-sm-8">
+                                  <input type="email" class="form-control" value="{% if user.is_superuser %}
+                                  Administrator
+                              {% else %}
+                                  User
+                              {% endif %}" id="inputName" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">Join Date</label>
+                                <div class="col-sm-8">
+                                    <input type="email" class="form-control" value="{{ request.user.date_joined }}" id="inputName" readonly>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="col-md-4">
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">Last Name</label>
+                                <div class="col-sm-8">
+                                    {{userprofile.last_name}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">Phone</label>
+                                <div class="col-sm-8">
+                                    {{userprofile.phone}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">Birthdate</label>
+                                <div class="col-sm-8">
+                                    {{userprofile.birthdate}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">Facebook</label>
+                                <div class="col-sm-8">
+                                    {{userprofile.facebook_url}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-4 col-form-label">Last Visit</label>
+                                <div class="col-sm-8">
+                                    <input type="email" class="form-control" value="{{ request.user.last_login }}" id="inputName" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group row">
+                                {{userprofile.image}}
+                            </div>
+    
+                        </div>
+                    </div>
+                    
+                  </div>
+                  <!-- /.tab-pane -->
+              </div>
+                <!-- /.tab-content -->
+              </div><!-- /.card-body -->
+              <div class="card-footer">
+                <a href="{% url 'password_change' %}">Change password</a>  || <a href="{% url 'password_reset' %}">I forgot my password</a> || <a href="{% url 'deleteaccount' %}">Delete My Account</a>
+              </div>
+            </div>
+            <!-- /.card -->
+            <div class="row">
+                <div class="col-12">
+                  <a href="{% url 'userprofile' %}" class="btn btn-secondary">Cancel</a>
+                  <input type="submit" value="Save Edits" class="btn btn-success float-right">
+                </div>
+              </div>
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </form>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+{% endblock content %}
+  
+{% block extra_scripts %}
+{% load static %}
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+
+{% endblock extra_scripts %}
